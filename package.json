@@ -1,11 +1,10 @@
 {
-  "name": "chat",
+  "name": "map",
   "version": "1.0.0",
-  "description": "Basic chat app",
+  "description": "",
   "main": "index.js",
   "dependencies": {
-    "ejs": "^2.3.3",
-    "express": "^4.13.3",
+    "express": "^3.2.6",
     "socket.io": "^0.9.16"
   },
   "devDependencies": {},
@@ -14,15 +13,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/govindsinghr3/Chat.git"
+    "url": "git+https://github.com/govindsinghr3/track.git"
   },
-  "author": "Lucky",
+  "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/govindsinghr3/Chat/issues"
+    "url": "https://github.com/govindsinghr3/track/issues"
   },
-  "engines": {
-    "node": "4.2.6"
-  },
-  "homepage": "https://github.com/govindsinghr3/Chat#readme"
+  "homepage": "https://github.com/govindsinghr3/track#readme"
 }
