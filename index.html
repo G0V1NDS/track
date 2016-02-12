@@ -1,0 +1,129 @@
+<html>
+<head>
+	<title>Chat with socket.io and node.js</title>
+	<style>
+		#map{
+			height:600px;
+			width:500px;
+			border:1px dotted;
+		}
+	</style>
+</head>
+<body>
+
+    <form id="register" >
+        <input type="text" id="name" placeholder="Your Nickname here"/>
+				<select id='user'>
+						<option value='Move'>Get Tracket</option>
+						<option value='Monitor'>Track</option>
+				</select>
+        <input type="submit" value="Set"/>
+    </form>
+
+		<div id="map">
+
+		</div>
+		<input type='button' id='discon' value='clear'/>
+
+	<!-- <script src="https://code.jquery.com/jquery-latest.min.js"></script> -->
+	<!-- <script type="text/javascript" src="https://maps.google.com/maps/api/js"></script> -->
+	<script src="gmap.js"></script>
+	<script src="jquery.js"></script>
+	<script src="/socket.io/socket.io.js"></script>
+	<script>
+		var $name, $mode;
+		var marker;
+		var $usr_pos=new Array();
+
+		jQuery(function($){
+			var client=io.connect();
+			$('#map').hide();
+			$('#register').submit(function(e){
+					e.preventDefault();
+					$name=$('#name').val();
+					$mode=$('#user').val();
+					$(this).hide();
+					$('#map').show();
+
+					//Checking geolocation support and creating map and marker variable
+					if (navigator.geolocation) {
+					 navigator.geolocation.watchPosition(showPosition);
+					}
+					else {
+					 $('#map').html("Geolocation is not supported by this browser.");
+					}
+					var coords = new google.maps.LatLng(0, 0);
+					var options = {
+						zoom: 20,
+						//center: coords,
+						mapTypeControl: false,
+						navigationControlOptions: {
+							style: google.maps.NavigationControlStyle.SMALL
+						},
+						mapTypeId: google.maps.MapTypeId.ROADMAP
+					};
+					var map = new google.maps.Map($('#map')[0], options);
+					marker = new google.maps.Marker({
+							position: coords,
+							map: map,
+							icon: 'small_red.png',
+							title:$name,
+							id:$name
+					});
+
+					//Socket sending username and his mode of view
+					io.sockets.on('test',function(msg){
+						alert(msg);
+					console.log(msg);
+					});
+					client.on('remove',function(name){
+						console.log(name);
+						for(i=0;i<$usr_pos.length;i++)
+							{
+								if($usr_pos[i].id===name)
+								{
+								$usr_pos.splice(i,1);
+									break;
+								}
+						}
+					});
+					client.emit('submit',{'name':$name,'mode':$mode,'marker_id':marker.id});
+					 client.on('new marker',function(data){
+						 var mark = new google.maps.Marker({
+	 							position: coords,
+	 							map: map,
+	 							icon: 'small_red.png',
+	 							title:data,
+	 							id:data
+	 					});
+					 	$usr_pos.push(mark);
+					 });
+
+					//Moving position
+					function showPosition(position) {
+							coords = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+							map.setCenter(coords);
+							marker.setPosition(coords);
+							client.emit('new position',{'coords':coords,'marker_id':marker.id});
+							client.on('show move',function(data){
+
+								for(i=0;i<$usr_pos.length;i++)
+								{
+									if($usr_pos[i].id===data.marker_id)
+									{
+										$usr_pos[i].setPosition(data.coords);
+										break;
+									}
+								}
+							});
+					}
+
+				});
+
+				$('#discon').click(function(){
+					client.disconnect();
+				});
+		});
+	</script>
+</body>
+</html>
