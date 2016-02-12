@@ -2,7 +2,7 @@ var express = require('express'),
 	app = express(),
 	server = require('http').createServer(app),
 	io = require('socket.io').listen(server);
-	io.set('log level', 1);
+	//io.set('log level', 1);
 var mover=new Array(),monitor=new Array();
 server.listen(process.env.PORT || 5000);
 app.use(express.static('files'));
@@ -40,8 +40,7 @@ app.get('/', function(req, res){
 });
 function remove_marker(client,mover,monitor){
 	console.log('disconnect event fired');
-	io.sockets.emit('test','Hello dear');
-		 /*var obj;
+		 var obj;
 		 for(i=0;i<mover.length;i++)
 		 {
 			 if(mover[i].socket===client)
@@ -63,7 +62,6 @@ function remove_marker(client,mover,monitor){
 			 }
 		 }
 
-		 console.log(obj.name);
-		 client.emit('remove',obj.name);
-		 console.log(obj.name);*/
+		 io.emit('remove',obj.name);
+		 console.log(obj.name);		 
 }

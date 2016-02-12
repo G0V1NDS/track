@@ -34,9 +34,9 @@
 		var $name, $mode;
 		var marker;
 		var $usr_pos=new Array();
-
+		var client=io.connect();
 		jQuery(function($){
-			var client=io.connect();
+
 			$('#map').hide();
 			$('#register').submit(function(e){
 					e.preventDefault();
@@ -72,21 +72,6 @@
 					});
 
 					//Socket sending username and his mode of view
-					client.on('test',function(msg){
-						alert(msg);
-					console.log(msg);
-					});
-					client.on('remove',function(name){
-						console.log(name);
-						for(i=0;i<$usr_pos.length;i++)
-							{
-								if($usr_pos[i].id===name)
-								{
-								$usr_pos.splice(i,1);
-									break;
-								}
-						}
-					});
 					client.emit('submit',{'name':$name,'mode':$mode,'marker_id':marker.id});
 					 client.on('new marker',function(data){
 						 var mark = new google.maps.Marker({
@@ -97,7 +82,20 @@
 	 							id:data
 	 					});
 					 	$usr_pos.push(mark);
+						console.log($usr_pos[0].id);
 					 });
+			 		client.on('remove',function(name){
+						for(i=0;i<$usr_pos.length;i++)
+						{
+							if($usr_pos[i].id===name)
+							{
+								$usr_pos[i].setMap(null);
+								$usr_pos.splice(i,1);
+								break;
+							}
+						}
+					});
+
 
 					//Moving position
 					function showPosition(position) {
@@ -121,9 +119,11 @@
 				});
 
 				$('#discon').click(function(){
+					marker.setMap(null);
 					client.disconnect();
 				});
 		});
+
 	</script>
 </body>
 </html>
