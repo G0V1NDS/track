@@ -4,7 +4,7 @@ var express = require('express'),
 	io = require('socket.io').listen(server);
 	io.set('log level', 1);
 var mover=new Array(),monitor=new Array();
-server.listen(4000);
+server.listen(process.env.PORT || 5000);
 app.use(express.static('files'));
 
 app.get('/', function(req, res){
