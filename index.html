@@ -62,6 +62,8 @@
 						},
 						mapTypeId: google.maps.MapTypeId.ROADMAP
 					};
+					var infowindow = new google.maps.InfoWindow();
+
 					var map = new google.maps.Map($('#map')[0], options);
 					marker = new google.maps.Marker({
 							position: coords,
@@ -70,17 +72,23 @@
 							title:$name,
 							id:$name
 					});
+					infowindow.setContent($name);
+					infowindow.open(map,marker);
+					
 
 					//Socket sending username and his mode of view
 					client.emit('submit',{'name':$name,'mode':$mode,'marker_id':marker.id});
 					 client.on('new marker',function(data){
+					 var infowindow = new google.maps.InfoWindow();
+					 infowindow.setContent(data);
 						 var mark = new google.maps.Marker({
 	 							position: coords,
 	 							map: map,
 	 							icon: 'small_red.png',
 	 							title:data,
-	 							id:data
+	 							id:data,
 	 					});
+						infowindow.open(map,mark);
 					 	$usr_pos.push(mark);
 						console.log($usr_pos[0].id);
 					 });
