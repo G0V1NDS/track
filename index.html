@@ -91,10 +91,10 @@
 					else {
 					 $('#map').html("Geolocation is not supported by this browser.");
 					}
-					var coords = new google.maps.LatLng(0, 0);
+					var coords = new google.maps.LatLng(24.23895253, 79.27734375);
 					var options = {
-						zoom: 8,
-						//center: coords,
+						zoom: 4,
+						center: coords,
 						mapTypeControl: false,
 						navigationControlOptions: {
 							style: google.maps.NavigationControlStyle.SMALL
@@ -140,7 +140,7 @@
 					//Moving position
 					function showPosition(position) {
 							coords = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-							map.setCenter(coords);
+							//map.setCenter(coords);
 							client.emit('new position',{'coords':coords,'id':$name});
 							client.on('show move',function(data){
 								for(i=0;i<$usr_pos.length;i++)

@@ -8,7 +8,7 @@ server.listen(process.env.PORT || 5000);
 app.use(express.static('files'));
 
 app.get('/', function(req, res){
-	res.sendfile(__dirname + '/index.html');
+	res.sendFile(__dirname + '/index.html');
 });
 
 var usr=new Array();
