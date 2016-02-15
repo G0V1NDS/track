@@ -102,7 +102,12 @@
 						mapTypeId: google.maps.MapTypeId.ROADMAP
 					};
 					coords = new google.maps.LatLng(0, 0);
-
+					if(navigator.geolocation) {
+						navigator.geolocation.getCurrentPosition(function(position) {
+						initialLocation = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
+						map.setCenter(initialLocation);
+						});
+					};
 					var map = new google.maps.Map($('#map')[0], options);					
 
 					//Socket sending username and his mode of view
@@ -123,6 +128,7 @@
 							$usr_pos.push(temp_mark);
 							$infowindow.push(infowindow);
 						}
+						console.log(i+" past info given");
 					});
 			 		client.on('remove',function(name){
 						for(i=0;i<$usr_pos.length;i++)
